@@ -15,4 +15,4 @@
   - SWR,
   - TailwindCSS,
 
-#### Thank You for checkin up the code, I hope You liked it. ;) - V2.0-Beta
+#### Thank You for checkin up the code, hope You like it. ;) ***V2.0-Beta***
