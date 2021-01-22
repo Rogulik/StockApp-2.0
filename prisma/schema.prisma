@@ -1,0 +1,111 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Employee {
+  id          String      @id @default(cuid())
+  email       String      @unique
+  name        String
+  position    String
+  password    String
+  boss        Owner       @relation(fields: [bossId], references: [id])
+  bossId      String      @map("boss_id")
+  workplace   Restaurant? @relation(fields: [workplaceId], references: [id])
+  workplaceId String?     @map("workplace_id")
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+
+  @@map("employees")
+}
+
+model Ingredient {
+  id        String   @id @default(cuid())
+  name      String
+  price     Int
+  amount    Int
+  scaleType Scale    @default(Grams) @map("scale_type")
+  dishes    Dish[]
+  owner     Owner    @relation(fields: [ownerId], references: [id])
+  ownerId   String   @map("owner_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("ingredients")
+}
+
+model Dish {
+  id          String       @id @default(cuid())
+  name        String
+  price       Int
+  portion     String
+  ingredients Ingredient[]
+  menu        Menu         @relation(fields: [menuId], references: [id])
+  menuId      String       @map("menu_id")
+  restaurants Restaurant[]
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+
+  Owner   Owner?  @relation(fields: [ownerId], references: [id])
+  ownerId String?
+  @@map("dishes")
+}
+
+model Menu {
+  id        String   @id @default(cuid())
+  name      String
+  type      String
+  owner     Owner    @relation(fields: [ownerId], references: [id])
+  ownerId   String   @map("owner_id")
+  dishes    Dish[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  Restaurant   Restaurant? @relation(fields: [restaurantId], references: [id])
+  restaurantId String?
+  @@map("menus")
+}
+
+model Restaurant {
+  id        String     @id @default(cuid())
+  name      String
+  location  String
+  owner     Owner      @relation(fields: [ownerId], references: [id])
+  ownerId   String     @map("owner_id")
+  employees Employee[]
+  menus     Menu[]
+  dishes    Dish[]
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+
+  @@map("restaurants")
+}
+
+model Owner {
+  id           String       @id @default(cuid())
+  name         String
+  email        String       @unique
+  createdAt    DateTime     @default(now()) @map("created_at")
+  updatedAt    DateTime     @updatedAt @map("updated_at")
+  businessName String       @map("business_name")
+  password     String
+  restaurants  Restaurant[]
+  employees    Employee[]
+  menus        Menu[]
+  dishes       Dish[]
+
+  Ingredient Ingredient[]
+  @@map("owners")
+}
+
+enum Scale {
+  Grams
+  Liters
+}
