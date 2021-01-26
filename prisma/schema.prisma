@@ -100,8 +100,8 @@ model Owner {
   employees    Employee[]
   menus        Menu[]
   dishes       Dish[]
+  ingredients  Ingredient[]
 
-  Ingredient Ingredient[]
   @@map("owners")
 }
 

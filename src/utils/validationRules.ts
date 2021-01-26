@@ -10,7 +10,7 @@ export const ownerRegisterValidation = [
     .isLength({ min: 1 })
     .withMessage("Name must not be empty")
     .trim(),
-  body("name")
+  body("businessName")
     .isLength({ min: 1 })
     .withMessage("Business name must not be empty")
     .trim(),
@@ -30,4 +30,31 @@ export const loginValidation = [
   body("password")
     .isLength({ min: 1 })
     .withMessage("Password must not be empty"),
+]
+
+export const restaurantValidation = [
+  body("*.name")
+    .isLength({ min: 1 })
+    .withMessage("Name must not be empty")
+    .trim(),
+  body("*.location")
+    .isLength({ min: 1 })
+    .withMessage("Location must not be empty")
+    .trim(),
+]
+
+export const employeeRegisterValidation = [
+  body("*.email")
+    .isLength({ min: 1 })
+    .withMessage("Email must not be empty")
+    .isEmail()
+    .withMessage("Must be a valid email address"),
+  body("*.name")
+    .isLength({ min: 1 })
+    .withMessage("Name must not be empty")
+    .trim(),
+  body("*.position")
+    .isLength({ min: 1 })
+    .withMessage("Position name must not be empty")
+    .trim(),
 ]

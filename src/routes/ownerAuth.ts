@@ -8,7 +8,7 @@ import {
   loginValidation,
 } from "../utils/validationRules"
 import setCookie from "../utils/setCookie"
-import auth from "../middleware/auth"
+import ownerAuth from "../middleware/ownerAuth"
 
 const register = async (req: Request, res: Response) => {
   const { name, email, password, businessName }: Owner = req.body
@@ -37,6 +37,9 @@ const register = async (req: Request, res: Response) => {
         password: false,
       },
     })
+
+    res.set("Set-Cookie", setCookie(email, "ownerToken"))
+
     return res.json(owner)
   } catch (err) {
     console.log(err)
@@ -97,7 +100,7 @@ const router = Router()
 
 router.post("/register", ownerRegisterValidation, checkForErrors, register)
 router.get("/login", loginValidation, checkForErrors, login)
-router.get("/me", auth, me)
-router.get("/logout", auth, logout)
+router.get("/me", ownerAuth, me)
+router.get("/logout", ownerAuth, logout)
 
 export default router

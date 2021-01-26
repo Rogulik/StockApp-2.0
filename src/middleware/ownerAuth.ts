@@ -2,13 +2,13 @@ import { NextFunction, Request, Response } from "express"
 import jwt from "jsonwebtoken"
 import prisma from "../lib/prisma"
 
-const auth = async (req: Request, res: Response, next: NextFunction) => {
+const ownerAuth = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = req.cookies.ownerToken
 
     if (!token) throw new Error("Unauthenticated")
 
-    const { email }: any = jwt.verify(token, process.env.JWT_SECRET || "")
+    const { property: email }: any = jwt.verify(token, process.env.JWT_SECRET!)
 
     const owner = await prisma.owner.findFirst({
       where: { email },
@@ -22,7 +22,7 @@ const auth = async (req: Request, res: Response, next: NextFunction) => {
       },
     })
 
-    if (!token) throw new Error("Unauthenticated")
+    if (!owner) throw new Error("Unauthenticated")
 
     res.locals.owner = owner
 
@@ -33,4 +33,4 @@ const auth = async (req: Request, res: Response, next: NextFunction) => {
   }
 }
 
-export default auth
+export default ownerAuth
